@@ -24,4 +24,4 @@ services:
       PMA_USER: root
       PMA_PASSWORD: root
     ports:
-      - 9008:80
+      - 9013:80

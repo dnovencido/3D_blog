@@ -1,22 +1,37 @@
 <?php
     include "functions.php";
+    include "session.php";
 
     $errors = [];
 
     if($_POST['submit']) {
+
         if(!$_POST['name']) {
             $errors[] = "Name is required.";
         }
+
         if(!$_POST['email']) {
             $errors[] = "Email is required.";
         }
+
+        if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+           $errors[] = "Invalid email address.";
+        }
+
         if(!$_POST['password']) {
             $errors[] = "Password is required.";
         }
 
         if(empty($errors)) {
             if(!check_existing_email($_POST['email'])){
-                // save user to db
+                $user = save_registration($_POST['name'], $_POST['email'], $_POST['password']);
+                if(!empty($user)) {
+                    $_SESSION['id'] = $user['id'];
+                    $_SESSION['name'] = $user['name'];
+                    header("Location: account.php");
+                } else {
+                    $errors[] = "There was an error in logging in your acount.";
+                }
             } else {
                 $errors[] = "The email is already existed.";
             }
@@ -33,13 +48,7 @@
                         <div id="register-form">
                             <h1>Register an account.</h1>
                             <?php if(!empty($errors)) { ?>
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        <?php foreach($errors as $row) { ?>
-                                            <li><?= $row ?></li>
-                                        <?php } ?>
-                                    </ul>
-                                </div>
+                                <?php include "layouts/_error-messages.php"; ?>
                             <?php } ?>
                             <form method="post">
                                 <div class="input-control">
