@@ -67,4 +67,46 @@
 
         return $user;
     }
+
+    function get_categories() {
+        global $connection;
+        $categories = [];
+
+        $query= "SELECT * FROM `categories`";
+        $result = mysqli_query($connection, $query);
+
+        if(mysqli_num_rows($result)) {
+            $categories = $result;
+        }
+
+        return $categories;
+    }
+
+    function save_blog($title, $body, $category_id, $user_id) {
+        global $connection;
+        $flag = false;
+
+        $date_created = date("Y-m-d H:i:s");
+        $query = "INSERT INTO `blogs` (`user_id`, `category_id`, `title`,  `body`, `date_created`) VALUES ('".escape_string($user_id)."', '".escape_string($category_id)."', '".escape_string($title)."', '".escape_string($body)."', '".$date_created."')";
+
+        if(mysqli_query($connection, $query)) {
+            $flag = true;
+        } 
+        return $flag;
+    }
+
+    function get_my_blogs($user_id) {
+        global $connection;
+        $blogs = [];
+        
+        $query = "SELECT `b`.`id` as `blog_id`, `b`.`title`, `b`.`body`, `c`.`category_name`, `b`.`date_created` FROM `blogs` as `b` INNER JOIN `categories` as `c` ON `c`.`id` = `b`.`category_id` WHERE `b`.`user_id` = '".escape_string($user_id)."'";
+        $result = mysqli_query($connection, $query);
+        
+        if(mysqli_num_rows($result) > 0) {
+            $blogs = $result;
+        }
+        
+        return $blogs;
+    }
+
 ?>
