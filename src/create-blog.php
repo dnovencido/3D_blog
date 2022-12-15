@@ -7,27 +7,7 @@
     $categories = get_categories();
 
     if($_POST['submit']) {
-
-        if(!$_POST['title']) {
-            $errors[] = "Title is required.";
-        }
-
-        if(strlen($_POST['title']) < 20) {
-            $errors[] = "Title must be atleast 20 characters.";
-        }
-
-        if(!$_POST['body']) {
-            $errors[] = "Body is required.";
-        }
-
-        if(str_word_count($_POST['body']) < 20) {
-            $errors[] = "Body must be atleast 20 words.";
-        }
-
-        if(!$_POST['category_id']) {
-            $errors[] = "Category is required.";
-        }
-
+        $errors = validate_form_blog($_POST['title'], $_POST['body'], $_POST['category_id']);
         if(empty($errors)) {
             if(save_blog($_POST['title'], $_POST['body'], $_POST['category_id'], $_SESSION['id'])) {
                 header("Location: my-blogs.php");

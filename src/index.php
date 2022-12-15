@@ -2,7 +2,7 @@
     include "session.php";
     
     if(isset($_SESSION['id'])) {
-        header("Location: account.php");
+        header("Location: feed.php");
     }
 ?>
 <?php include "layouts/_header.php"; ?>
